@@ -74,3 +74,14 @@ async function searchMovies(query, page = 1) {
     }
 }
 
+function performSearch(){
+    const query = searchInput.ariaValueMax.trim();
+    if(query){
+        searchMovies(query);
+    }else{
+        // when serch empty show popular movies
+        isSearching = false;
+        fetchPopularMovies();
+    }
+}
+
