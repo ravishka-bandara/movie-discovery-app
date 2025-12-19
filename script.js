@@ -10,7 +10,7 @@ const searchBtn = document.getElementById('searchBtn');
 const sectionTitle = document.getElementById('sectionTitle');
 const movieModal = document.getElementById('movieModal');
 const modalBody = document.getElementById('modalBody');
-const closeBtn = document.getElementById('.close');
+const closeBtn = document.querySelector('.close');
 
 // initialization
 
