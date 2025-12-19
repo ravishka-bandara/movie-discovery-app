@@ -1,9 +1,9 @@
+// Replace with your actual TMDB API key
 const API_KEY = '77640f8c58e70b3e2b148b414e1d7952';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
-// dom elements
-
+// DOM Elements
 const moviesGrid = document.getElementById('moviesGrid');
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
@@ -12,96 +12,89 @@ const movieModal = document.getElementById('movieModal');
 const modalBody = document.getElementById('modalBody');
 const closeBtn = document.querySelector('.close');
 
-// initialization
-
+// Initialize
 let currentPage = 1;
 let isSearching = false;
 let currentSearchTerm = '';
 
-// load popular muvies when page loads
-
-document.addEventListener('DOMContentLoaded', () =>{
+// Load popular movies on page load
+document.addEventListener('DOMContentLoaded', () => {
     fetchPopularMovies();
-
-    //event listners
+    
+    // Event Listeners
     searchBtn.addEventListener('click', performSearch);
-    searchInput.addEventListener('keypress', (e) =>{
-        if (e.key === 'enter')performSearch();
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch();
     });
-
-    closeBtn.addEventListener('click', () =>{
+    closeBtn.addEventListener('click', () => {
         movieModal.style.display = 'none';
     });
-
-    //close modal when click outside
-    window.addEventListener('click', (e) =>{
-        if (e.target === movieModal){
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === movieModal) {
             movieModal.style.display = 'none';
         }
     });
-    
 });
 
-// fetch populer movies
+// 1. Fetch Popular Movies
 async function fetchPopularMovies() {
-    try{
+    try {
         const response = await fetch(
-            `{$BASE_URL}/movie/popular?api_key=${API_KEY}&page=${currentPage}`
+            `${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${currentPage}`
         );
         const data = await response.json();
         displayMovies(data.results);
         sectionTitle.textContent = 'Popular Movies';
-    } catch (error){
+    } catch (error) {
         console.error('Error fetching popular movies:', error);
-        moviesGrid.innerHTML = '<p class="error">Failed to load movies. please try again.</p>';
+        moviesGrid.innerHTML = '<p class="error">Failed to load movies. Please try again.</p>';
     }
 }
 
-// search movies 
-
+// 2. Search Movies
 async function searchMovies(query, page = 1) {
-    try{
+    try {
         const response = await fetch(
-            `{$BASE_URL}/search/movie?api-key=${API_KEY}&query=${query}&page=${page}`
+            `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&page=${page}`
         );
         const data = await response.json();
         displayMovies(data.results);
-        sectionTitle.textContent = `search result for "${query}"`;
+        sectionTitle.textContent = `Search Results for "${query}"`;
         currentSearchTerm = query;
         isSearching = true;
-    } catch (error){
-        console.error('error searching movies:', error);
+    } catch (error) {
+        console.error('Error searching movies:', error);
     }
 }
 
-function performSearch(){
-    const query = searchInput.ariaValueMax.trim();
-    if(query){
+function performSearch() {
+    const query = searchInput.value.trim();
+    if (query) {
         searchMovies(query);
-    }else{
-        // when serch empty show popular movies
+    } else {
+        // If search is empty, show popular movies
         isSearching = false;
         fetchPopularMovies();
     }
 }
 
-// display movies in grid
-
-function displayMovies(movies){
-    if(movies.length === 0){
-        moviesGrid.innerHTML = `<p class="no-results"> No movies found. try again with different search.</p>`;
+// 3. Display Movies in Grid
+function displayMovies(movies) {
+    if (movies.length === 0) {
+        moviesGrid.innerHTML = '<p class="no-results">No movies found. Try a different search.</p>';
         return;
     }
 
-    moviesGrid.innerHTML = movies.map(movie =>`
-        <div class="movie-card" data-id="${movie.id}>
-        <img
-            src="${movie.poster_path ? IMG_BASE_URL + movie.poster_path : 'https://via.placeholder.com/200x300?text=No+Poster'}"
-            alt="${movie.title}"
-            class"movie-poster"
-            loading="lazy"
+    moviesGrid.innerHTML = movies.map(movie => `
+        <div class="movie-card" data-id="${movie.id}">
+            <img 
+                src="${movie.poster_path ? IMG_BASE_URL + movie.poster_path : 'https://via.placeholder.com/200x300?text=No+Poster'}" 
+                alt="${movie.title}" 
+                class="movie-poster"
+                loading="lazy"
             >
-
             <div class="movie-info">
                 <h3 class="movie-title" title="${movie.title}">${movie.title}</h3>
                 <p class="movie-year">${movie.release_date ? movie.release_date.substring(0, 4) : 'N/A'}</p>
@@ -112,7 +105,7 @@ function displayMovies(movies){
         </div>
     `).join('');
 
-    // Add click event to each cardd
+    // Add click event to each movie card
     document.querySelectorAll('.movie-card').forEach(card => {
         card.addEventListener('click', () => {
             const movieId = card.getAttribute('data-id');
@@ -121,8 +114,7 @@ function displayMovies(movies){
     });
 }
 
-//fetch movie details for modal
-
+// 4. Fetch Movie Details (for modal)
 async function fetchMovieDetails(movieId) {
     try {
         const response = await fetch(
@@ -135,7 +127,7 @@ async function fetchMovieDetails(movieId) {
     }
 }
 
-// Show Movie Detaiils Modal
+// 5. Show Movie Details Modal
 function showMovieModal(movie) {
     const directors = movie.credits.crew.filter(person => person.job === 'Director');
     const topCast = movie.credits.cast.slice(0, 5);
@@ -178,7 +170,7 @@ function showMovieModal(movie) {
     
     movieModal.style.display = 'block';
     
-    // Add CSS for modal layout add my style.css
+    // Add CSS for modal layout (add to your style.css)
     if (!document.querySelector('#modal-styles')) {
         const modalStyles = document.createElement('style');
         modalStyles.id = 'modal-styles';
@@ -247,8 +239,7 @@ function showMovieModal(movie) {
     }
 }
 
-// Favorites System 
-//use local storage
+// 6. Favorites System (using Local Storage)
 function toggleFavorite(movieId) {
     let favorites = JSON.parse(localStorage.getItem('movieFavorites')) || [];
     
@@ -274,3 +265,14 @@ function updateFavoriteButton(movieId) {
         button.style.background = isFavorite ? '#2ecc71' : '#e74c3c';
     }
 }
+
+window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+        currentPage++;
+        if (isSearching) {
+            searchMovies(currentSearchTerm, currentPage);
+        } else {
+            fetchPopularMovies(currentPage);
+        }
+    }
+});
