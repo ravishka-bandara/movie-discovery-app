@@ -43,3 +43,17 @@ document.addEventListener('DOMContentLoaded', () =>{
 });
 
 // fetch populer movies
+async function fetchPopularMovies() {
+    try{
+        const response = await fetch(
+            `{$BASE_URL}/movie/popular?api_key=${API_KEY}&page=${currentPage}`
+        );
+        const data = await response.json();
+        displayMovies(data.results);
+        sectionTitle.textContent = 'Popular Movies';
+    } catch (error){
+        console.error('Error fetching popular movies:', error);
+        moviesGrid.innerHTML = '<p class="error">Failed to load movies. please try again.</p>';
+    }
+}
+
