@@ -12,3 +12,9 @@ const movieModal = document.getElementById('movieModal');
 const modalBody = document.getElementById('modalBody');
 const closeBtn = document.getElementById('.close');
 
+// initialization
+
+let currentPage = 1;
+let isSearching = false;
+let currentSearchTerm = '';
+
