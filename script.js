@@ -135,7 +135,7 @@ async function fetchMovieDetails(movieId) {
     }
 }
 
-// 5. Show Movie Detaiils Modal
+// Show Movie Detaiils Modal
 function showMovieModal(movie) {
     const directors = movie.credits.crew.filter(person => person.job === 'Director');
     const topCast = movie.credits.cast.slice(0, 5);
@@ -178,7 +178,7 @@ function showMovieModal(movie) {
     
     movieModal.style.display = 'block';
     
-    // Add CSS for modal layout (add to your style.css)
+    // Add CSS for modal layout add my style.css
     if (!document.querySelector('#modal-styles')) {
         const modalStyles = document.createElement('style');
         modalStyles.id = 'modal-styles';
@@ -244,5 +244,33 @@ function showMovieModal(movie) {
             }
         `;
         document.head.appendChild(modalStyles);
+    }
+}
+
+// Favorites System 
+//use local storage
+function toggleFavorite(movieId) {
+    let favorites = JSON.parse(localStorage.getItem('movieFavorites')) || [];
+    
+    if (favorites.includes(movieId)) {
+        favorites = favorites.filter(id => id !== movieId);
+        alert('Removed from favorites!');
+    } else {
+        favorites.push(movieId);
+        alert('Added to favorites!');
+    }
+    
+    localStorage.setItem('movieFavorites', JSON.stringify(favorites));
+    updateFavoriteButton(movieId);
+}
+
+function updateFavoriteButton(movieId) {
+    const favorites = JSON.parse(localStorage.getItem('movieFavorites')) || [];
+    const isFavorite = favorites.includes(movieId);
+    
+    const button = document.querySelector('.favorite-btn');
+    if (button) {
+        button.innerHTML = `<i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i> ${isFavorite ? 'Remove from' : 'Add to'} Favorites`;
+        button.style.background = isFavorite ? '#2ecc71' : '#e74c3c';
     }
 }
