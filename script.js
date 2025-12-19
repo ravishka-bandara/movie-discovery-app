@@ -85,3 +85,38 @@ function performSearch(){
     }
 }
 
+// display movies in grid
+
+function displayMovies(movies){
+    if(movies.length === 0){
+        moviesGrid.innerHTML = `<p class="no-results"> No movies found. try again with different search.</p>`;
+        return;
+    }
+
+    moviesGrid.innerHTML = movies.map(movie =>`
+        <div class="movie-card" data-id="${movie.id}>
+        <img
+            src="${movie.poster_path ? IMG_BASE_URL + movie.poster_path : 'https://via.placeholder.com/200x300?text=No+Poster'}"
+            alt="${movie.title}"
+            class"movie-poster"
+            loading="lazy"
+            >
+
+            <div class="movie-info">
+                <h3 class="movie-title" title="${movie.title}">${movie.title}</h3>
+                <p class="movie-year">${movie.release_date ? movie.release_date.substring(0, 4) : 'N/A'}</p>
+                <p class="movie-rating">
+                    <i class="fas fa-star"></i> ${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}
+                </p>
+            </div>
+        </div>
+    `).join('');
+
+    // Add click event to each cardd
+    document.querySelectorAll('.movie-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const movieId = card.getAttribute('data-id');
+            fetchMovieDetails(movieId);
+        });
+    });
+}
