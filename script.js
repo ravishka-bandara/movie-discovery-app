@@ -33,5 +33,12 @@ document.addEventListener('DOMContentLoaded', () =>{
         movieModal.style.display = 'none';
     });
 
+    //close modal when click outside
+    window.addEventListener('click', (e) =>{
+        if (e.target === movieModal){
+            movieModal.style.display = 'none';
+        }
+    });
     
-})
+});
+
