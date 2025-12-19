@@ -57,3 +57,20 @@ async function fetchPopularMovies() {
     }
 }
 
+// search movies 
+
+async function searchMovies(query, page = 1) {
+    try{
+        const response = await fetch(
+            `{$BASE_URL}/search/movie?api-key=${API_KEY}&query=${query}&page=${page}`
+        );
+        const data = await response.json();
+        displayMovies(data.results);
+        sectionTitle.textContent = `search result for "${query}"`;
+        currentSearchTerm = query;
+        isSearching = true;
+    } catch (error){
+        console.error('error searching movies:', error);
+    }
+}
+
