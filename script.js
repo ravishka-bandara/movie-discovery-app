@@ -18,3 +18,20 @@ let currentPage = 1;
 let isSearching = false;
 let currentSearchTerm = '';
 
+// load popular muvies when page loads
+
+document.addEventListener('DOMContentLoaded', () =>{
+    fetchPopularMovies();
+
+    //event listners
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) =>{
+        if (e.key === 'enter')performSearch();
+    });
+
+    closeBtn.addEventListener('click', () =>{
+        movieModal.style.display = 'none';
+    });
+
+    
+})
