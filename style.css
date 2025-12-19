@@ -162,3 +162,16 @@ h1{
     color: white;
 }
 
+
+
+/*======= mobile resposivee===*/
+
+@media (max-width: 768px){
+    .movies-grid{
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    h1{
+        font-size: 2rem;
+    }
+}
